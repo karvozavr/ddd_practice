@@ -13,6 +13,10 @@ dependencies {
     implementation(project(":kitchen:usecase"))
     implementation(project(":kitchen:persistence"))
 
+    implementation(project(":delivery:domain"))
+    implementation(project(":delivery:usecase"))
+    implementation(project(":delivery:persistence"))
+
     implementation(project(":order:domain"))
     implementation(project(":order:usecase"))
     implementation(project(":order:persistence"))

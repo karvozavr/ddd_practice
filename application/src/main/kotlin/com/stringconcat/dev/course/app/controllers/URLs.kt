@@ -14,6 +14,9 @@ object URLs {
 
     const val kitchen_orders = "/kitchen/orders"
     const val cook_kitchen_order = "$kitchen_orders/cook"
+
+    const val delivery_orders = "/delivery/orders"
+    const val deliver_order = "$delivery_orders/deliver"
 }
 
 object Views {

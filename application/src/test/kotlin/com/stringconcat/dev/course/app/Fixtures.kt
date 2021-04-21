@@ -4,6 +4,10 @@ import arrow.core.Either
 import com.stringconcat.ddd.common.types.base.Version
 import com.stringconcat.ddd.common.types.common.Address
 import com.stringconcat.ddd.common.types.common.Count
+import com.stringconcat.ddd.delivery.domain.order.DeliveryOrder
+import com.stringconcat.ddd.delivery.domain.order.DeliveryOrderId
+import com.stringconcat.ddd.delivery.usecase.order.DeliveryOrderExtractor
+import com.stringconcat.ddd.delivery.usecase.order.DeliveryOrderPersister
 import com.stringconcat.ddd.order.domain.cart.CustomerId
 import com.stringconcat.ddd.order.domain.menu.Meal
 import com.stringconcat.ddd.order.domain.menu.MealDescription
@@ -93,6 +97,17 @@ fun meal(removed: Boolean = false): Meal {
     )
 }
 
+fun deliveryOrderId() = DeliveryOrderId(Random.nextLong())
+
+fun deliveryOrder(id: DeliveryOrderId = deliveryOrderId(), address: Address = address()): DeliveryOrder {
+    return DeliveryOrder.create(
+        id = id,
+        deliveryAddress = address
+    ).also {
+        it.popEvents()
+    }
+}
+
 class TestCustomerOrderExtractor : CustomerOrderExtractor, LinkedHashMap<CustomerOrderId, CustomerOrder>() {
     override fun getById(orderId: CustomerOrderId) = this[orderId]
 
@@ -111,4 +126,22 @@ class TestMealExtractor : HashMap<MealId, Meal>(), MealExtractor {
     }
 
     override fun getAll() = this.values.toList()
+}
+
+class TestDeliveryOrderPersister : DeliveryOrderPersister, HashMap<DeliveryOrderId, DeliveryOrder>() {
+
+    override fun save(order: DeliveryOrder) {
+        this[order.id] = order
+    }
+}
+
+class TestDeliveryOrderExtractor : DeliveryOrderExtractor, HashMap<DeliveryOrderId, DeliveryOrder>() {
+
+    override fun getById(orderId: DeliveryOrderId): DeliveryOrder? {
+        return this[orderId]
+    }
+
+    override fun getAll(): List<DeliveryOrder> {
+        return values.toList()
+    }
 }
